@@ -1,5 +1,5 @@
 input = String.new
-File.open("day_1_input.txt", "r") do |f|
+File.open("input.txt", "r") do |f|
   f.each_line do |line|
     input += line
   end
