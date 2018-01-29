@@ -1,28 +1,12 @@
-puzzle_input = Array.new
-
-File.open("input.txt", "r") do |f|
-  i = 0
-  f.each_line do |line|
-    while i < 128 do
-      puzzle_input << (line + "-" + i.to_s).split(//).map{ |x| x.codepoints }.flatten
-      i += 1
-    end
-  end
-end
-
-knot_hashes = Array.new
-binary = Array.new
-count = 0
-
-puzzle_input.each do |puzzle|
+def knot_hash(puzzle_input)
   my_list = (0..255).to_a
   skip_size = 0
   current_position = 0
   suffix = [17, 31, 73, 47, 23]
-  puzzle += suffix
+  puzzle_input += suffix
 
   64.times do
-    puzzle.each do |length|
+    puzzle_input.each do |length|
       if current_position + length < my_list.length
         sublist = my_list[current_position, length]
       else
@@ -52,19 +36,5 @@ puzzle_input.each do |puzzle|
     end
   end
 
-  knot_hashes << my_list.each_slice(16).map{ |x| x.inject(:^).to_s(16).rjust(2, '0') }.inject(:+)
+  my_list.each_slice(16).map{ |x| x.inject(:^).to_s(16).rjust(2, '0') }.inject(:+)
 end
-
-knot_hashes.each do |row|
-  s = ""
-  row.chars.each do |char| 
-    s += char.hex.to_s(2).rjust(4, '0')
-  end
-  binary << s
-end
-
-binary.each do |row| 
-  count += row.count("1")
-end
-
-puts count
